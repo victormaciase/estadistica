@@ -1,0 +1,2 @@
+# estadistica
+Curso estadística pregrado
