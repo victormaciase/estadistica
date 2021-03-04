@@ -1,0 +1,47 @@
+---
+title: "Estadística I"
+---
+<br>
+<p>
+Profesor: Víctor Macías E.
+<br>
+E-mail: victor.macias@mail.udp.cl
+</p>
+<br>
+
+
+<h2>Objetivos del aprendizaje</h2>
+
+<ul>
+  <li>Utilizar las técnicas básicas de la estadística descriptiva establecer valores y relaciones empíricas entre variables, que aporten a la toma de decisiones.</li>
+  <li>Realizar los análisis en forma reproducible y letrada (literate), es decir que sean transparentes para un tercero y que tanto la documentación, el medio elegido (por ejemplo, el software) como la organización del análisis haga factible y fácil reproducir el mismo análisis del autor.</li>
+</ul>
+
+Este curso aporta al perfil de egreso del estudiante en los siguientes aspectos:
+
+<ul>
+  <li>Desarrollo de competencias analíticas y de resolución de problemas.</li>
+  <li>Desarrollar competencias tecnológicas: programación, ciencia de datos, TI.</li>
+</ul>
+
+<h2>Programa del curso</h2>
+
+El curso está estructurado en 4 unidades:
+
+<ol>
+    <li>Estadística descriptiva y visualización estadística</li>
+    <li>Modelación de datos con regresión lineal</li>
+    <li>Variables aleatorias y probabilidad</li>
+    <li>Estadísticas muestrales como variables aleatorias</li>
+</ol>
+
+<h2>Evaluaciones</h2>
+
+<ul>
+    <li>Controles online individuales (10%)</li>
+    <li>Prueba solemne individual (30%)</li>
+    <li>Trabajo semestral (60%)</li>
+</ul>
+
+
+
