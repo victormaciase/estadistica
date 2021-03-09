@@ -1,0 +1,225 @@
+---
+header-includes: \usepackage{fontawesome}
+output:
+  pdf_document: default
+---
+
+
+\begin{center}
+			\includegraphics[width=5cm]{logo_ingcomercial.jpg}\\
+			\LARGE{\textbf{Estadística I}}\\
+			\textbf{Guía de Ejercicios 1}\\
+			\vspace{0.2cm}
+			\textit{Vectores, data frames y tibbles}
+\end{center}
+\vspace{1cm}
+\begin{flushright}
+  \textbf{Profesor}: \textit{Víctor Macías E.}  
+\end{flushright}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results='hide', message = FALSE, warning = FALSE)
+```
+
+
+# Pregunta 1
+
+(a) Genere un vector que contenga la siguiente secuencia de números de 1 al 10: ${1,2,3,...,10}$
+```{r }
+seq(1,10,2) #forma 1
+a <- 1:10  #forma 2
+a
+seq(10) #forma 3
+```
+
+(b) Genere un vector del 1 al 5 que contenga 10 elementos
+
+```{r}
+seq(1,5, length=10)
+```
+
+(c) Genere un vector que contenga los números: 10, 30, 50 y luego calcule su suma, suma acumulada y suma de los cuadrados de cada uno de los números. 
+
+```{r }
+z <- c(10, 30, 50)
+names(z) <- c("A","B","C")
+z
+```
+
+# Pregunta 2
+
+El vector $x$ contiene los años de vida útil restante de 5 máquinas, excepto para las máquinas $B$ y $D$:
+
+```{r echo = TRUE}
+x = c("A"=6, "B"=NA, "C"=10, "D"=NA, "E"=20)
+```
+
+
+(a) Defina un vector $y$ que excluya los missing values (NA).
+
+```{r }
+#y=x[-c(2,4)] #forma 1
+y=x[c(4,5)] #forma 1
+y
+```
+```{r }
+y=x[c(-2,-4)] # forma 2
+y
+```
+```{r }
+is.na(x)
+!is.na(x)
+#y=x[!is.na(x)] # forma 3
+#y
+```
+
+```{r }
+y = na.omit(x) # forma 4
+y
+```
+
+(b) Calcule el promedio aritmético de la vida útil de las 5 máquinas
+
+```{r }
+#mean(x)
+mean(x, na.rm = TRUE) #forma 1
+```
+
+```{r }
+mean(x[!is.na(x)]) #forma 2
+```
+
+```{r }
+sum(x[!is.na(x)])/length(x[!is.na(x)]) #forma 3
+```
+
+(c) Calcule la proporción de máquinas que tienen una vida útil restante de 10 años o menos
+
+```{r }
+x<=10
+mean(x<=10, na.rm = TRUE)
+
+mean(x[x<=10], na.rm = TRUE)
+```
+
+(d) ¿Cuántas máquinas tienen una vida útil menor o igual a 10 años?
+
+```{r }
+sum(x<=10, na.rm = TRUE)
+```
+
+# Pregunta 3
+
+La siguiente tabla presenta el número de unidades en stock de los productos $1$ y $2$ en cuatro zonas:
+
+zona    | stock_1 | stock_2 
+---   |---       | ----     
+A  |  800        |  700       
+B  |  200        |  300       
+C  |  700        |  600        
+D  |  300        |  400        
+
+
+(a) Construya dicha tabla como un data frame/tibble y asigne el dataframe a `stock_total_df` y el tibble a `stock_total_tb`
+
+```{r}
+zona <- c("A", "B", "C", "D")
+stock_1 <- c(800,200,700,300)
+stock_2 <- c(700,300,600,400)
+
+stock_total_df <- data.frame(zona, stock_1, stock_2)    # dataframe
+stock_total_df 
+```
+
+```{r}
+# Tibble
+
+library(tibble) # loading the package
+
+stock_total_tb <- tibble(zona = c("A", "B", "C", "D"),
+                         stock_1 = c(800,200,700,300),
+                         stock_2 = c(700,300,600,400)
+                           )
+stock_total_tb
+```
+
+
+```{r}
+#class(stock_total_df)
+
+class(stock_total_tb)
+```
+
+
+(b) Escriba en el script `summary(stock_total_tb)` ¿Qué obtiene?
+
+```{r }
+summary(stock_total_tb)
+```
+
+(c) Escriba en el script `str(stock_total_tb)` y `dplyr::glimpse(stock_total_tb)` ¿Qué obtiene?  
+
+```{r }
+library(dplyr)
+
+str(stock_total_tb) #forma 1
+glimpse(stock_total_tb) #forma 2 - parte de dplyr
+
+```
+
+(d) Presente las primeras tres y últimas dos observaciones de `stock_total_tb` 
+
+```{r }
+head(stock_total_tb, n=3)
+```
+```{r }
+tail(stock_total_tb, n=2)
+```
+
+(e) Construya un tibble con las observaciones de las variables `zona` y `stock_2` 
+
+```{r }
+
+stock_total_tb %>% select(-stock_1)  # forma 1
+
+stock_total_tb %>% select(zona, stock_2) # forma 2
+```
+
+(f) Construya un tibble con los stocks de las zonas $A$ y $C$
+
+```{r }
+library(dplyr)
+stock_total_tb %>% filter(zona=="A" | zona=="C")
+```
+
+(g) Construya una variable `stock_total` que sea igual a la suma de `stock_1` y `stock_2`
+
+```{r }
+stock_total_tb <- stock_total_tb %>% mutate(stock_total = stock_1 + stock_2)
+stock_total_tb
+
+```
+
+(h) Genere una variable que toma el valor "alto" si el stock total de una zona determinada es mayor a 1000 e igual a "bajo", si no son mayores. 
+
+```{r }
+stock_total_tb <- stock_total_tb %>% mutate(mayor = if_else(stock_total > 1000, "alto", "bajo"))
+stock_total_tb
+```
+
+(i) Guarde `stock_total_tb` con extensión $.csv$
+
+```{r }
+library(readr) #loading the package
+write_csv(stock_total_tb, path = "stock_total.csv")
+
+
+```
+
+
+
+
+
+
+

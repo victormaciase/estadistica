@@ -19,9 +19,7 @@ navbar:
     - text: Guías de Ejercicios
       menu: 
         - text: Guía 1
-          href: guia1.html
-        - text: Guía 2
-          href: guia2.html
+          href: Guias/Guia_1.pdf
     - text: Bibliografía
       href: Bibliografia.html
     - text: Recursos
