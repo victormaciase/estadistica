@@ -1,0 +1,269 @@
+---
+header-includes: \usepackage{fontawesome}
+output:
+  pdf_document: default
+---
+
+
+\begin{center}
+			\includegraphics[width=5cm]{logo_ingcomercial.jpg}\\
+			\LARGE{\textbf{Estadística I}}\\
+			\textbf{Guía de Ejercicios 2}\\
+			\vspace{0.2cm}
+\end{center}
+\vspace{1cm}
+\begin{flushright}
+  \textbf{Profesor}: \textit{Víctor Macías E.}  
+\end{flushright}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+```
+
+\vspace{0.5cm}
+En esta guía se trabajará con el dataset `gapminder` que se encuentra disponible en el paquete `gapminder`. Se recomienda revisar el siguiente link: <https://cran.r-project.org/web/packages/gapminder/>
+
+
+```{r}
+library(dplyr)
+library(janitor)
+library(kableExtra)
+library(ggplot2)
+library(ggthemes)
+library(skimr)
+```
+
+```{r}
+data(gapminder, package = "gapminder")
+```
+
+
+# Pregunta 1
+
+(a) ¿Cuántas observaciones y variables tiene el dataset `gapminder`? ¿Qué representa cada variable? ¿En qué unidad se miden `lifeExp`, `pop` y `gdpPercap`?
+
+(b) ¿Cuántas variables son cuantitativas? ¿Cuántas son categóricas?
+
+
+```{r eval = FALSE}
+glimpse(gapminder)
+```
+
+# Pregunta 2
+
+Muestre las primeras 8 observaciones del conjunto de datos
+
+```{r eval = FALSE}
+gapminder %>% slice_head(n = 8)
+```
+
+# Pregunta 3
+
+¿Cuántos países por año son incluidos en la muestra? ¿Para qué años hay información disponible?
+
+```{r eval = FALSE}
+gapminder %>% group_by(year) %>% tally()
+```
+
+
+# Pregunta 4
+
+Construya la siguiente tabla que muestra el número de países para cada uno de los años y continentes ¿Qué puede concluir?
+
+```{r}
+gapminder %>% tabyl(year, continent) %>% adorn_totals(c("row", "col")) %>%
+  adorn_title("combined") %>% kbl(booktabs = T, linesep = '') %>% 
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+
+# Pregunta 5
+
+Construya la siguiente tabla que muestra estadística descriptiva para las variables `pop`, `lifeExp` y `gdpPercap` para el año 2007.
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  select(pop, lifeExp, gdpPercap) %>%
+  skim() %>%
+  yank("numeric") %>%
+  select(-c("n_missing", "complete_rate", "hist")) %>%
+  kbl(booktabs = T,
+      col.names = c("Variable", "Media", "Desv. Estándar", "Mínimo",
+                    "p25", "p50", "p75", "Máximo"),
+      linesep = '',
+      digits = 1) %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+
+# Pregunta 6
+
+Construya la siguiente tabla que muestra estadística descriptiva para la variable `lifeExp` por continente para el año 2007.
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  select(continent, lifeExp) %>%
+  group_by(continent) %>%
+  skim() %>%
+  yank("numeric") %>%
+  select(-c("skim_variable", "n_missing", "complete_rate", "hist")) %>%
+  kbl(booktabs = T,
+      col.names = c("Continente", "Media", "Desv. Estándar", "Mínimo",
+                    "p25", "p50", "p75", "Máximo"),
+      linesep = '',
+      digits = 1) %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+
+# Pregunta 7 
+
+Construya la siguiente tabla que identifica a los 5 países con mayor población el año 2007
+
+```{r}
+gapminder %>% filter(year == 2007) %>%
+  select(country, pop) %>%
+  arrange(desc(pop)) %>% 
+  slice_head(n = 5) %>%
+  kbl(booktabs = T,
+      col.names = c("País", "Población"),
+      linesep = '',
+      digits = 0) %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+# Pregunta 8
+
+Construya la siguiente tabla que identifica a los 7 países con menor PIB per cápita el año 2007
+
+```{r}
+gapminder %>% filter(year == 2007) %>%
+  select(country, gdpPercap) %>%
+  arrange(gdpPercap) %>%
+  slice_head(n = 7) %>%
+  kbl(booktabs = T,
+      col.names = c("País", "PIB per cápita (dólares)"),
+      linesep = '',
+      digits = 0) %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+# Pregunta 9
+
+Construya el siguiente histograma que representa la distribución de frecuencias del PIB per cápita el año 2007 ¿Qué puede concluir de la forma de esta distribución? (Ayuda: En este gráfico se usó `bins = 20` para especificar el ancho de los bins en `geom_histogram()`. Otra opción es usar `binwidth`)
+
+```{r fig.width = 8, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+
+gapminder %>% filter(year == 2007) %>%
+  ggplot(aes(x = gdpPercap)) +
+  geom_histogram(bins = 20, col = "#ffffff", fill = "#3fa3ab") +
+  scale_x_continuous(labels = function(x) x/1000,
+                     breaks = seq(0,50000,5000)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(title = "PIB per cápita alrededor del mundo",
+       subtitle = "2007",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = "PIB per cápita (miles de dólares)",
+       y = "Frecuencia") +
+  theme_classic()
+```
+
+
+# Pregunta 10
+
+Construya el siguiente diagrama de caja para la variable `lifeExp` en el año 2007 (Ayuda: En este gráfico se especificó `ggplot(aes(x = continent, y = lifeExp))`, de modo que en el eje X se encuentre la variable `continent` y en el eje Y, la variable `lifeExp`. Posteriormente,  se agregó `coord_flip()` para rotar los ejes)
+
+```{r fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+gapminder %>% filter(year == 2007) %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_boxplot(show.legend = FALSE, colour = "#999393", fill = "lightblue") +
+  scale_y_continuous(breaks = seq(35, 85, 5), labels = seq(35, 85, 5)) +
+  labs(title = "Expectativa de vida al nacer por continentes",
+       subtitle ="2007",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = NULL,
+       y = "Expectativa de vida al nacer (años)") +
+  coord_flip() +
+  theme_bw()
+```
+
+\newpage
+# Pregunta 11
+
+Construya el siguiente gráfico de dispersión que muestra la relación entre de la expectativa de vida al nacer y PIB per cápita para el año 2007. Presente también un gráfico en que el eje X use una escala logarítmica en base 10 ¿Qué diferencias observa entre ambos gráficos? (Ayuda: En el segundo gráfico se usó `scale_x_log10()` para incorporar una escala logarítmica en el eje X)
+
+```{r fig.width = 8, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+gapminder %>% filter(year==2007) %>%
+  ggplot(aes(x=gdpPercap, y=lifeExp, colour = continent))+
+  geom_point(alpha = 0.3) +
+  scale_colour_brewer(name = NULL, palette = "Set1") +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       subtitle = "2007",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  theme_classic() +
+  theme(legend.position = c(0.9, 0.2))
+```
+
+```{r fig.width = 8, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+gapminder %>% filter(year==2007) %>%
+  ggplot(aes(x=gdpPercap, y=lifeExp, colour = continent))+
+  geom_point(alpha = 0.3) +
+  scale_x_log10() +
+  scale_colour_brewer(name = NULL, palette = "Set1") +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       subtitle = "2007",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  theme_classic() +
+  theme(legend.position = c(0.9, 0.2))
+```
+
+\newpage
+# Pregunta 12
+
+Construya el siguiente gráfico de dispersión que muestra la relación entre de la expectativa de vida al nacer y PIB per cápita para los años 1992, 1997, 2002 y 2007, incluyendo sólo a los países del continente americano. Use la misma escala para representar los valores del eje Y (Ayuda: Para  que los cuatro gráficos sean adyacentes se usó `facet_grid(cols = vars(year))`)
+
+
+```{r fig.width = 8, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+gapminder %>%
+  filter(year %in% c(1992, 1997, 2002, 2007), continent == "Americas") %>%
+  ggplot(aes(x=gdpPercap, y=lifeExp))+
+  geom_point(alpha = 0.6, col = "#800000") +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  theme_bw() +
+  facet_grid(cols = vars(year))
+```
+
+# Pregunta 13
+
+Construya el siguiente gráfico de línea que muestra la evolución de la expectativa de vida al nacer para Chile, El Salvador, Japón y Estados Unidos en el período 1952-2007. 
+
+```{r fig.width = 8, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+gapminder %>% filter(country %in% c("Chile", "El Salvador", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_line(aes(color = country), size=1.1)+
+  scale_x_continuous(breaks = seq(1952, 2007, 5), 
+                     labels = seq(1952, 2007, 5))+
+  scale_color_brewer(name = NULL, type = "qual", palette = "Dark2")+
+  labs(title = "Expectativa de vida al nacer",
+       subtitle = "1952-2007",
+       caption = "Fuente: Elaboración propia en base a gapminder",
+       x = "Año",
+       y = "Expectativa de vida al nacer (años)") +
+  theme_minimal() +
+  theme(legend.position = c(0.9, 0.2))
+```
+
+
+
+
+

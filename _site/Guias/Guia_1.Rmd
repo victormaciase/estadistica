@@ -19,7 +19,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, results='hide', message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(results='hide', message = FALSE, warning = FALSE, echo = FALSE)
 ```
 
 
@@ -28,24 +28,30 @@ knitr::opts_chunk$set(echo = FALSE, results='hide', message = FALSE, warning = F
 (a) Genere un vector que contenga la siguiente secuencia de números de 1 al 10: ${1,2,3,...,10}$
 ```{r }
 seq(1,10,2) #forma 1
-a <- 1:10  #forma 2
-a
+1:10  #forma 2
 seq(10) #forma 3
+c(1,2,3,4,5,6,7,8,9,10) #forma 4
 ```
 
 (b) Genere un vector del 1 al 5 que contenga 10 elementos
 
 ```{r}
-seq(1,5, length=10)
+seq(1,5, length.out=10)
 ```
 
 (c) Genere un vector que contenga los números: 10, 30, 50 y luego calcule su suma, suma acumulada y suma de los cuadrados de cada uno de los números. 
 
 ```{r }
 z <- c(10, 30, 50)
-names(z) <- c("A","B","C")
 z
 ```
+
+```{r}
+sum(z)
+cumsum(z)
+sum(z**2)  
+```
+
 
 # Pregunta 2
 
@@ -59,30 +65,25 @@ x = c("A"=6, "B"=NA, "C"=10, "D"=NA, "E"=20)
 (a) Defina un vector $y$ que excluya los missing values (NA).
 
 ```{r }
-#y=x[-c(2,4)] #forma 1
-y=x[c(4,5)] #forma 1
-y
+y = x[-c(2,4)] #forma 1
 ```
+
 ```{r }
 y=x[c(-2,-4)] # forma 2
-y
 ```
+
 ```{r }
-is.na(x)
-!is.na(x)
-#y=x[!is.na(x)] # forma 3
-#y
+y=x[!is.na(x)] # forma 3
 ```
 
 ```{r }
 y = na.omit(x) # forma 4
-y
 ```
 
 (b) Calcule el promedio aritmético de la vida útil de las 5 máquinas
 
 ```{r }
-#mean(x)
+mean(x)
 mean(x, na.rm = TRUE) #forma 1
 ```
 
@@ -97,11 +98,13 @@ sum(x[!is.na(x)])/length(x[!is.na(x)]) #forma 3
 (c) Calcule la proporción de máquinas que tienen una vida útil restante de 10 años o menos
 
 ```{r }
-x<=10
 mean(x<=10, na.rm = TRUE)
+```
 
+```{r}
 mean(x[x<=10], na.rm = TRUE)
 ```
+
 
 (d) ¿Cuántas máquinas tienen una vida útil menor o igual a 10 años?
 
@@ -127,29 +130,22 @@ D  |  300        |  400
 zona <- c("A", "B", "C", "D")
 stock_1 <- c(800,200,700,300)
 stock_2 <- c(700,300,600,400)
+```
 
+```{r}
 stock_total_df <- data.frame(zona, stock_1, stock_2)    # dataframe
 stock_total_df 
 ```
 
+
 ```{r}
-# Tibble
-
-library(tibble) # loading the package
-
-stock_total_tb <- tibble(zona = c("A", "B", "C", "D"),
+stock_total_tb <- tibble::tibble(zona = c("A", "B", "C", "D"),
                          stock_1 = c(800,200,700,300),
                          stock_2 = c(700,300,600,400)
                            )
 stock_total_tb
 ```
 
-
-```{r}
-#class(stock_total_df)
-
-class(stock_total_tb)
-```
 
 
 (b) Escriba en el script `summary(stock_total_tb)` ¿Qué obtiene?
@@ -173,9 +169,19 @@ glimpse(stock_total_tb) #forma 2 - parte de dplyr
 ```{r }
 head(stock_total_tb, n=3)
 ```
+
 ```{r }
 tail(stock_total_tb, n=2)
 ```
+
+```{r}
+stock_total_tb %>% slice_head(n= 3)
+```
+
+```{r}
+stock_total_tb %>% slice_tail(n= 2)
+```
+
 
 (e) Construya un tibble con las observaciones de las variables `zona` y `stock_2` 
 
@@ -211,10 +217,7 @@ stock_total_tb
 (i) Guarde `stock_total_tb` con extensión $.csv$
 
 ```{r }
-library(readr) #loading the package
-write_csv(stock_total_tb, path = "stock_total.csv")
-
-
+readr::write_csv(stock_total_tb, file = "stock_total.csv")
 ```
 
 

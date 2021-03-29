@@ -1,2 +1,2 @@
 # estadistica
-Curso estadística pregrado
+Sitio web curso Estadística I pregrado

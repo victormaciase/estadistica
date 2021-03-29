@@ -4,8 +4,12 @@ navbar:
   left:
     - text: Notas de Clases
       menu: 
-        - text: Datos
-          href: Datos.html
+        - text: Estadística y datos
+          href: NotasClases/DatosYVariables.html
+        - text: Distribución de los datos
+          href: NotasClases/DistribuciónFrecuencias.html
+        - text: Medidas de localización, dispersión y distribución
+          href: NotasClases/EstadísticaDescriptiva.html
     - text: Tutoriales de R
       menu: 
         - text: Instalación de R
@@ -16,10 +20,16 @@ navbar:
           href: tutoriales/IntroRMarkdown.html
         - text: Importar datos a R
           href: tutoriales/ImportarR.html
+        - text: Introducción a dplyr y tidyr
+          href: tutoriales/Intro_dplyr.html
+        - text: Gráficos en ggplot2
+          href: tutoriales/Intro_ggplot2.html
     - text: Guías de Ejercicios
       menu: 
         - text: Guía 1
           href: Guias/Guia_1.pdf
+        - text: Guía 2
+          href: Guias/Guia_2.pdf  
     - text: Bibliografía
       href: Bibliografia.html
     - text: Recursos
