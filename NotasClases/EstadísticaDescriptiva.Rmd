@@ -302,7 +302,7 @@ $$\sigma ^2=\frac{\sum_{i=1}^n (x_i-\overline x)^2}{n-1}$$
 
 Muestra cuán grande es la desviación estándar en relación a la media.
 
-$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = \left(\frac{\sigma_x}{\overline x} \times 100\right )\%$$
+$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = \left(\frac{s}{\overline x} \times 100\right )\%$$
 
 El coeficiente de variación es un estadístico útil para comparar la dispersión de variables que tienen desviaciones estándar y medias distintas.
 
@@ -328,6 +328,10 @@ IQR(x)   # rango intercuartil
 ```
 
 ```{r}
+var(x)   # varianza
+```
+
+```{r}
 sd(x)   # desviación estándar
 ```
 
@@ -349,7 +353,7 @@ Note que la fórmula es general para admitir la presencia de `NA`s!
 
 class: middle
 
-# Aplicación: Datos loan50
+# Aplicación: Datos de loan50
 
 A continuación se presenta estadística descriptiva de la variable `interest_rate`:
 
@@ -378,6 +382,24 @@ loan50 %>% select(interest_rate) %>%
   select(-c("skim_variable", "n_missing", 
             "complete_rate", "hist")) %>% kbl(digits = 2) %>%
   kable_styling(bootstrap_options = "striped", font_size = 13)
+```
+
+
+---
+
+class: middle
+
+# Aplicación: Peso recién nacido en gramos o kilos
+
+A continuación se calculará el coeficiente de variación del peso medido en gramos y kilos. Note que la desviación estándar es mayor para el peso medido en gramos.
+
+```{r}
+tibble::tibble(peso_gr = c(2800, 3200, 3800, 2900, 3500),  # peso en gramos
+               peso_kg = peso_gr/1000) %>%                 # peso en kilos
+  summarise(mean_gr = mean(peso_gr), sd_gr = sd(peso_gr),  # media y sd peso en gramos
+            mean_kg = mean(peso_kg), sd_kg = sd(peso_kg),  # media y sd peso en kilos
+            coefvar_gr = 100*sd_gr/mean_gr,  # coef. variación peso en gramos 
+            coefvar_kg = 100*sd_kg/mean_kg)  # coef. variación peso en kilos
 ```
 
 
@@ -417,12 +439,45 @@ class: middle
 loan50 %>% ggplot(aes(x = interest_rate)) + 
   geom_boxplot(colour = "#636363", fill = "#3fa3ab") +
   labs(x = "Tasa de interés") +
-  scale_x_continuous(labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
   theme(panel.background = element_blank(), axis.title.y = element_blank(),
         axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
         axis.line = element_line(size = 0.3, color = "#AD9F9F"))
 ```
 
+---
+
+class: middle
+
+Las 5 observaciones con las menores tasas de interés son:
+
+```{r}
+loan50 %>% select(interest_rate) %>% slice_min(interest_rate, n = 5)
+```
+
+Las 5 observaciones con las mayores tasas de interés son:
+
+```{r}
+loan50 %>% select(interest_rate) %>% slice_max(interest_rate, n = 5) 
+```
+
+
+---
+
+class: middle
+
+A continuación se presentan las 50 observaciones representadas por puntos de color rojo:
+
+```{r fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
+loan50 %>% ggplot(aes(x = interest_rate, y = 1)) +
+  geom_boxplot(colour = "#636363", fill = "#3fa3ab", outlier.shape = NA) +
+  geom_jitter(colour = "#960012", alpha = 0.6) + 
+  labs(x = "Tasa de interés") +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  theme(panel.background = element_blank(), axis.title.y = element_blank(),
+        axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
+        axis.line.x = element_line(size = 0.3, color = "#AD9F9F"))
+```
 
 ---
 
@@ -507,6 +562,23 @@ $$curtosis=\frac{\frac{\sum_{i=1}^n (x_i - \overline x)^4}{n}}{\left[\frac{\sum_
 
 ---
 
+class: middle
+
+# Aplicación: Datos de loan50
+
+```{r}
+library(moments)
+```
+
+
+```{r}
+loan50 %>% summarise(sesgo = skewness(interest_rate),
+                     curtosis = kurtosis(interest_rate))
+```
+
+
+---
+
 class: inverse, center, middle
 
 # Relación entre dos variables cuantitativas
@@ -543,7 +615,7 @@ class: middle
 
 # Aplicación: Datos de loan50
 
-A continuación se muestra la matriz de correlación de las variables:
+A continuación se muestra la matriz de correlación de las variables `loan_amount`, `interest_rate` y `total_income`:
 
 ```{r}
 loan50 %>% select(loan_amount, interest_rate, total_income) %>% 

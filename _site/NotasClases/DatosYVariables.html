@@ -7,6 +7,15 @@
     <script src="libs/header-attrs-2.6/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+    <script src="libs/jquery-1.12.4/jquery.min.js"></script>
+    <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding-0.17/datatables.js"></script>
+    <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
     <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
   </head>
@@ -123,100 +132,12 @@ class: middle
 
 # Aplicación: Préstamos en Lending Club
 
-A continuación se presentan las primeras 8 observaciones y 7 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
+A continuación se presentan las primeras 5 observaciones y 5 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
 
 
 
-
-
-
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; loan_amount &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; interest_rate &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; term &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; grade &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; state &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; total_income &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; homeownership &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 22000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 10.90 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 60 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; NJ &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 59000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; rent &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 6000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.92 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; CA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 60000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; rent &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 25000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 26.30 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; SC &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 75000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; mortgage &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 6000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.92 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; CA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 75000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; rent &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 25000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.43 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 60 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; OH &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 254000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; mortgage &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 6400 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.92 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; IN &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 67000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; mortgage &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 17.09 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; D &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; NY &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 28800 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; rent &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 14500 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6.08 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 36 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; MO &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 80000 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; mortgage &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+<div id="htmlwidget-6c8708aae4399af42d5a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c8708aae4399af42d5a">{"x":{"filter":"none","data":[[22000,6000,25000,6000,25000,6400,3000,14500,10000,18500,17000,12000,16000,16500,3000,29400,13500,18200,6000,18000,5000,40000,4500,15000,20000,20000,10000,9000,35000,40000,13125,32000,18000,30000,4400,7000,25000,6500,35000,7500,38500,15000,24000,24000,12800,6000,30000,5825,20000,15000],[10.9,9.92,26.3,9.92,9.43,9.92,17.09,6.08,7.97,12.62,17.09,5.31,7.35,5.31,7.96,24.85,18.06,10.42,7.96,19.42,14.08,20,9.44,9.92,10.91,5.32,6.71,15.04,11.98,12.62,10.91,9.44,9.93,7.35,18.45,17.09,7.96,6.08,6.71,7.34,12.62,16.02,10.9,9.93,9.44,10.42,21.45,10.91,9.43,6.08],[60,36,36,36,60,36,36,36,60,60,36,36,36,36,36,60,60,60,36,60,36,60,36,36,60,36,36,36,60,36,36,36,60,36,36,36,36,36,36,36,60,36,60,36,36,36,36,36,36,36],[59000,60000,75000,75000,254000,67000,28800,80000,34000,192000,73000,120000,100000,105000,34000,98000,68700,144000,100000,76000,169528,168000,80000,185000,42000,270000,65000,45000,245000,192000,116000,112000,218000,103000,58000,55000,65000,32000,325000,70000,160000,50000,71000,85000,87000,60000,58500,50000,103000,77500],["rent","rent","mortgage","rent","mortgage","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","mortgage","rent","rent","rent","mortgage","mortgage","mortgage","mortgage","rent","mortgage","rent","mortgage","own","mortgage","mortgage","rent","mortgage","mortgage","rent","rent","own","mortgage","rent","mortgage","rent","mortgage","rent","rent","mortgage","mortgage","mortgage","mortgage","rent","own","mortgage"]],"container":"<table class=\"5\">\n  <thead>\n    <tr>\n      <th>loan_amount<\/th>\n      <th>interest_rate<\/th>\n      <th>term<\/th>\n      <th>total_income<\/th>\n      <th>homeownership<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"dom":"tip","columnDefs":[{"className":"dt-right","targets":[0,1,2,3]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 
 Se recomienda revisar &lt;https://www.lendingclub.com/&gt; para mayor información.
 
@@ -271,7 +192,7 @@ class: middle
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-
+&lt;em&gt;Nota:&lt;/em&gt; En esta tabla se incluyen las variables `grade` y `state` que no fueron incorporadas anteriormente.
 
 ---
 class: inverse, center, middle
@@ -460,7 +381,11 @@ class: middle
 
 # Aplicación: Precio del bitcoin
 
-&lt;img src="DatosYVariables_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+&lt;img src="DatosYVariables_files/figure-html/unnamed-chunk-8-1.gif" style="display: block; margin: auto;" /&gt;
+
+
 
 ---
 class: inverse, right, middle

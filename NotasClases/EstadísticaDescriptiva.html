@@ -310,7 +310,7 @@ class: middle
 
 Muestra cuán grande es la desviación estándar en relación a la media.
 
-`$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = \left(\frac{\sigma_x}{\overline x} \times 100\right )\%$$`
+`$$Coeficiente \hspace{0.2cm} de \hspace{0.2cm} variación \hspace{0.2cm} = \left(\frac{s}{\overline x} \times 100\right )\%$$`
 
 El coeficiente de variación es un estadístico útil para comparar la dispersión de variables que tienen desviaciones estándar y medias distintas.
 
@@ -348,6 +348,15 @@ IQR(x)   # rango intercuartil
 
 
 ```r
+var(x)   # varianza
+```
+
+```
+## [1] 20.36364
+```
+
+
+```r
 sd(x)   # desviación estándar
 ```
 
@@ -378,7 +387,7 @@ Note que la fórmula es general para admitir la presencia de `NA`s!
 
 class: middle
 
-# Aplicación: Datos loan50
+# Aplicación: Datos de loan50
 
 A continuación se presenta estadística descriptiva de la variable `interest_rate`:
 
@@ -468,6 +477,32 @@ loan50 %&gt;% select(interest_rate) %&gt;%
 
 class: middle
 
+# Aplicación: Peso recién nacido en gramos o kilos
+
+A continuación se calculará el coeficiente de variación del peso medido en gramos y kilos. Note que la desviación estándar es mayor para el peso medido en gramos.
+
+
+```r
+tibble::tibble(peso_gr = c(2800, 3200, 3800, 2900, 3500),  # peso en gramos
+               peso_kg = peso_gr/1000) %&gt;%                 # peso en kilos
+  summarise(mean_gr = mean(peso_gr), sd_gr = sd(peso_gr),  # media y sd peso en gramos
+            mean_kg = mean(peso_kg), sd_kg = sd(peso_kg),  # media y sd peso en kilos
+            coefvar_gr = 100*sd_gr/mean_gr,  # coef. variación peso en gramos 
+            coefvar_kg = 100*sd_kg/mean_kg)  # coef. variación peso en kilos
+```
+
+```
+## # A tibble: 1 x 6
+##   mean_gr sd_gr mean_kg sd_kg coefvar_gr coefvar_kg
+##     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1    3240  416.    3.24 0.416       12.8       12.8
+```
+
+
+---
+
+class: middle
+
 ### A menudo se presentan los siguientes cinco números para resumir los datos: valor mínimo, percentil 25, mediana, percentil 75 y valor máximo
 
 --
@@ -501,14 +536,75 @@ class: middle
 loan50 %&gt;% ggplot(aes(x = interest_rate)) + 
   geom_boxplot(colour = "#636363", fill = "#3fa3ab") +
   labs(x = "Tasa de interés") +
-  scale_x_continuous(labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
   theme(panel.background = element_blank(), axis.title.y = element_blank(),
         axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
         axis.line = element_line(size = 0.3, color = "#AD9F9F"))
 ```
 
-&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
+---
+
+class: middle
+
+Las 5 observaciones con las menores tasas de interés son:
+
+
+```r
+loan50 %&gt;% select(interest_rate) %&gt;% slice_min(interest_rate, n = 5)
+```
+
+```
+## # A tibble: 6 x 1
+##   interest_rate
+##           &lt;dbl&gt;
+## 1          5.31
+## 2          5.31
+## 3          5.32
+## 4          6.08
+## 5          6.08
+## 6          6.08
+```
+
+Las 5 observaciones con las mayores tasas de interés son:
+
+
+```r
+loan50 %&gt;% select(interest_rate) %&gt;% slice_max(interest_rate, n = 5) 
+```
+
+```
+## # A tibble: 5 x 1
+##   interest_rate
+##           &lt;dbl&gt;
+## 1          26.3
+## 2          24.8
+## 3          21.4
+## 4          20  
+## 5          19.4
+```
+
+
+---
+
+class: middle
+
+A continuación se presentan las 50 observaciones representadas por puntos de color rojo:
+
+
+```r
+loan50 %&gt;% ggplot(aes(x = interest_rate, y = 1)) +
+  geom_boxplot(colour = "#636363", fill = "#3fa3ab", outlier.shape = NA) +
+  geom_jitter(colour = "#960012", alpha = 0.6) + 
+  labs(x = "Tasa de interés") +
+  scale_x_continuous(breaks = seq(0, 30, 5), labels = scales::percent_format(scale = 1, accuracy = 1), limits = c(0, 30)) +
+  theme(panel.background = element_blank(), axis.title.y = element_blank(),
+        axis.text.y  = element_blank(), axis.ticks.y = element_blank(),
+        axis.line.x = element_line(size = 0.3, color = "#AD9F9F"))
+```
+
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -593,6 +689,32 @@ La curtosis  no tiene unidades y no varía al cambiar las unidades de medición 
 
 ---
 
+class: middle
+
+# Aplicación: Datos de loan50
+
+
+```r
+library(moments)
+```
+
+
+
+```r
+loan50 %&gt;% summarise(sesgo = skewness(interest_rate),
+                     curtosis = kurtosis(interest_rate))
+```
+
+```
+## # A tibble: 1 x 2
+##   sesgo curtosis
+##   &lt;dbl&gt;    &lt;dbl&gt;
+## 1  1.10     3.65
+```
+
+
+---
+
 class: inverse, center, middle
 
 # Relación entre dos variables cuantitativas
@@ -629,7 +751,7 @@ class: middle
 
 # Aplicación: Datos de loan50
 
-A continuación se muestra la matriz de correlación de las variables:
+A continuación se muestra la matriz de correlación de las variables `loan_amount`, `interest_rate` y `total_income`:
 
 
 ```r
@@ -678,7 +800,7 @@ class: middle
 
 
 
-&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 &lt;code&gt;Fuente: Anscombe, F.J. 1973. Graphs in Statistical Analysis. The American Statistician, Vol. 27, No. 1., pp. 17-21.&lt;/code&gt;
 
@@ -693,7 +815,7 @@ Los siguientes gráficos fueron construidos a partir de datos que se encuentran 
 
 
 
-&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="EstadísticaDescriptiva_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
  
 

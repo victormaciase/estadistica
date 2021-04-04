@@ -19,6 +19,7 @@ options(htmltools.preserve.raw = FALSE, warning = FALSE, message = FALSE)
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(ggplot2)
+library(gganimate)
 library(dplyr)
 library(tidyquant)
 library(datasauRus)
@@ -125,20 +126,17 @@ class: middle
 
 # Aplicación: Préstamos en Lending Club
 
-A continuación se presentan las primeras 8 observaciones y 7 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
+A continuación se presentan las primeras 5 observaciones y 5 variables del conjunto de datos *loan50* que se encuentran disponibles en el paquete *openintro*.
 
 ```{r echo = FALSE}
 data("loan50")
 ```
 
 ```{r echo = FALSE}
-loan50_1 <- loan50 %>% select(loan_amount, interest_rate, term, grade, state, total_income, homeownership)
-```
-
-
-```{r echo = FALSE}
-head(loan50_1, 8) %>% 
-  kbl(format = 'html')
+loan50 %>% select(loan_amount, interest_rate, term, total_income, homeownership) %>%
+  DT::datatable(head(5),
+                rownames = FALSE,
+                options = list(pageLength = 5, dom = 'tip'))
 ```
 
 Se recomienda revisar <https://www.lendingclub.com/> para mayor información.
@@ -168,10 +166,9 @@ tibble::tibble(
                     
   ) %>%
     kbl(format = 'html')
-
 ```
 
-
+<em>Nota:</em> En esta tabla se incluyen las variables `grade` y `state` que no fueron incorporadas anteriormente.
 
 ---
 class: inverse, center, middle
@@ -322,19 +319,27 @@ class: middle
 
 # Aplicación: Precio del bitcoin
 
-```{r echo = FALSE, fig.width = 6, out.width = "70%", fig.align = "center", fig.asp = 0.618}
-bitcoin <- tq_get("CBBTCUSD", get = "economic.data", from = "2016-01-01", to = "2021-03-03")
+```{r echo = FALSE}
+bitcoin <- tq_get("CBBTCUSD", get = "economic.data", from = "2016-01-01", to = "2021-03-31")
+```
 
+```{r echo = FALSE, fig.align = "center", fig.asp = 0.618}
 bitcoin %>% 
   ggplot(aes(x = date, y = price)) +
-  geom_line(colour = "#3fa3ab", size = 0.5) +
+  geom_line(colour = "#3fa3ab", size = 0.7) +
+  geom_point(colour = "#4460B2") +
+  geom_text(aes(label = round(price,1)), hjust = -0.2, size = 3, colour = "#9F2A2A") +
   scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  coord_x_date(xlim = c("2016-01-01", "2021-05-31")) +
   labs(
        caption = paste0("Fuente: Elaboración propia en base a datos obtenidos", "\n", "de Federal Reserve Bank of St. Louis (FRED)", "\n", "https://fred.stlouisfed.org/series/CBBTCUSD"),
        x = NULL,
        y = "Precio (US$)") +
-  theme_tq()
+  theme_tq() +
+  transition_reveal(date)
 ```
+
+
 
 ---
 class: inverse, right, middle
